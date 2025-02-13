@@ -127,9 +127,9 @@ def main():
 
 
     # industrial gross demand (m.day-1, monthly resolution)
-    directory_for_water_demand   = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
+    directory_for_water_demand       = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
     # ~ industrial_gross_demand_file = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
-    industrial_gross_demand  = directory_for_water_demand + "/" + str(sys.argv[3])
+    industrial_gross_demand_file     = directory_for_water_demand + "/" + str(sys.argv[3])
     
 
     # clone map
