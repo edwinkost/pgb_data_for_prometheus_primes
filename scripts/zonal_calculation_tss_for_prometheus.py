@@ -35,7 +35,7 @@ class MakingNetCDF():
         self.longitudes = np.unique(pcr.pcr2numpy(pcr.xcoordinate(cloneMap), vos.MV))
 
         # netCDF format and attributes:
-        self.format = 'NETCDF4'
+        self.format = 'NETCDF3_CLASSIC'
         self.attributeDictionary = {}
         if attribute == None:
             self.attributeDictionary['institution'] = "None"
