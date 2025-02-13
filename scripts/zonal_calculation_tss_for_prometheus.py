@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -161,6 +163,7 @@ def main():
 
     # extending class (country) ids
     max_step = 7
+    max_step = 2
     for i in range(1, max_step+1, 1):
         cmd = "Extending class: step "+str(i)+" from " + str(max_step)
         print(cmd)
