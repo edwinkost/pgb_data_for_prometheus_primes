@@ -1,4 +1,4 @@
-ISO3	FID	Country	Perc_Man	Perc_Pow	row_number	percentage_for_electricity_production		-99	1
+ISO3	FID	Country	Perc_Man	Perc_Pow	row_number	percentage_for_electricity_production		-9	1
 AFG	2	Afghanistan	100.00	0.00	8	0.00		8	0
 ALB	5	Albania	94.27	5.73	11	5.73		11	5.734309475
 DZA	3	Algeria	99.60	0.40	57	0.40		57	0.397705438
