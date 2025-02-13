@@ -118,7 +118,7 @@ def main():
 
     # output file code (which will be used as part of output file names)												
     output_file_code = "historical"
-    output_file_code = str(sys.argv[2]
+    # ~ output_file_code = str(sys.argv[2])
 
     # industrial gross demand (m.day-1, monthly resolution)
     directory_for_water_demand  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
