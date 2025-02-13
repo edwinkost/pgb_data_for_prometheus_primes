@@ -105,8 +105,8 @@ def main():
 
 
     # output and temporary directories
-    out_directory     = "/scratch-shared/edwinbar/electricity_water_demand_estimate_based_on_aqueduct_2021/historical/"
-    # ~ out_directory = sys.argv[1]
+    # ~ out_directory     = "/scratch-shared/edwinbar/electricity_water_demand_estimate_based_on_aqueduct_2021/historical/"
+    out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
     if os.path.exists(out_directory):
@@ -128,8 +128,8 @@ def main():
 
     # industrial gross demand (m.day-1, monthly resolution)
     directory_for_water_demand   = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
-    industrial_gross_demand_file = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
-    # ~ industrial_gross_demand  = directory_for_water_demand + "/" + str(sys.argv[3])
+    # ~ industrial_gross_demand_file = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
+    industrial_gross_demand  = directory_for_water_demand + "/" + str(sys.argv[3])
     
 
     # clone map
@@ -198,10 +198,10 @@ def main():
     
 
     # start year and end year
-    staYear = 1960
-    endYear = 2019
-    # ~ staYear = int(sys.argv[4])
-    # ~ endYear = int(sys.argv[5])
+    # ~ staYear = 1960
+    # ~ endYear = 2019
+    staYear = int(sys.argv[4])
+    endYear = int(sys.argv[5])
     
 
     # attribute for netCDF files 
