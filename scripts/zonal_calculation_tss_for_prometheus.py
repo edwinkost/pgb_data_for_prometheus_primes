@@ -234,7 +234,7 @@ def main():
     for iYear in range(staYear, endYear+1):
         
         print(iYear)
-        
+
         for iMonth in range(1, 12+1):
 
             # initating the variable to calculate yearly electricity water demand
@@ -262,9 +262,10 @@ def main():
             country_annual_electricity_water_demand_volume  = country_annual_electricity_water_demand_volume + country_monthly_electricity_water_demand_volume
 
 
-        # index for writing the netcdf
+        # index and timeStamp for writing the netcdf
         if iYear == staYear: index = 0
         index = index + 1
+        timeStamp = datetime.datetime(int(iYear), int(12), int(31), int(0))
 
         # write values to a netcdf file
         var = "electricity_water_demand"
