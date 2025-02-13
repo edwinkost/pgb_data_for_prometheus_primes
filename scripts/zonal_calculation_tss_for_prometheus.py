@@ -105,7 +105,7 @@ def main():
 
 
     # output and temporary directories
-    out_directory     = "/scratch-shared/edwinbar/electricity_water_demand/test/"
+    out_directory     = "/scratch-shared/edwinbar/electricity_water_demand_estimate_based_on_aqueduct_2021/historical/"
     # ~ out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
@@ -163,7 +163,7 @@ def main():
 
     # extending class (country) ids
     max_step = 7
-    max_step = 2
+    # ~ max_step = 2
     for i in range(1, max_step+1, 1):
         cmd = "Extending class: step "+str(i)+" from " + str(max_step)
         print(cmd)
@@ -198,8 +198,8 @@ def main():
     
 
     # start year and end year
-    staYear = 2000
-    endYear = 2005
+    staYear = 1960
+    endYear = 2019
     # ~ staYear = int(sys.argv[4])
     # ~ endYear = int(sys.argv[5])
     
