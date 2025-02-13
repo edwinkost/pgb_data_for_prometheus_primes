@@ -119,7 +119,7 @@ def main():
 
 
     # output file code (which will be used as part of output file names)												
-    output_file_code = "historical"
+    output_file_code = "electricity_water_demand_historical"
     # ~ output_file_code = str(sys.argv[2])
 
 
@@ -133,13 +133,6 @@ def main():
     cloneMapFileName = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/lddsound_05min_version_20210330.map"
     pcr.setclone(cloneMapFileName) 
     
-
-    # cell area at 5 arcmin resolution (unit: m2)
-    cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
-    cell_area_5min       = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
-                                                                       varName = "automatic", cloneMapFileName = cloneMapFileName, LatitudeLongitude = True, specificFillValue = None, absolutePath = None), 0.0)
-    cellArea = pcr.ifthen(landmask, cell_area_5min)
-
 
     # class (country) ids
     uniqueIDsFile = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
@@ -158,6 +151,13 @@ def main():
     landmask = pcr.cover(landmask, pcr.defined(uniqueIDs))
     
 
+    # cell area at 5 arcmin resolution (unit: m2)
+    cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
+    cell_area_5min       = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
+                                                                       varName = "automatic", cloneMapFileName = cloneMapFileName, LatitudeLongitude = True, specificFillValue = None, absolutePath = None), 0.0)
+    cellArea = pcr.ifthen(landmask, cell_area_5min)
+
+
     # extending class (country) ids
     max_step = 7
     for i in range(1, max_step+1, 1):
@@ -170,6 +170,7 @@ def main():
     uniqueIDs = pcr.ifthen(landmask, uniqueIDs)
     pcr.report(uniqueIDs, "class_ids.map")                                
 
+
     # get a sample cell for every id
     x_min_for_each_id = pcr.areaminimum(pcr.xcoordinate(pcr.boolean(1.0)), uniqueIDs)
     sample_cells      = pcr.xcoordinate(pcr.boolean(1.0)) == x_min_for_each_id
@@ -178,6 +179,7 @@ def main():
     uniqueIDs_sample  = pcr.ifthen(sample_cells, uniqueIDs)
     # - save it to a pcraster map file
     pcr.report(uniqueIDs_sample, "sample.ids")                                
+
 
     # table contains country values of fraction of electricy water demand from industrial water demand
     # - column 1 is the row_number_CNTR_RG_01M_2020_4326.shp.tif.map
@@ -208,6 +210,7 @@ def main():
     attributeDictionary['comment'    ]  = "The country code is based on the " +  str(uniqueIDsFile) + "."
     # additional attribute defined in PCR-GLOBWB 
     attributeDictionary['description']  = "Created by Edwin H. Sutanudjaja, see https://github.com/edwinkost/pgb_data_for_prometheus_primes/blob/main/scripts/zonal_calculation_tss_for_aqueduct_2021_for_electricity_water_demand.py"
+
 
     # initiate the netcd object: 
     tssNetCDF = MakingNetCDF(cloneMapFile = cloneMapFileName, \
