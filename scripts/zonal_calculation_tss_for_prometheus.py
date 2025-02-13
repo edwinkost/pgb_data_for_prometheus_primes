@@ -129,6 +129,13 @@ def main():
     cloneMapFileName = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/lddsound_05min_version_20210330.map"
     pcr.setclone(cloneMapFileName) 
     
+    # cell area at 5 arcmin resolution (unit: m2)
+    cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
+    cell_area_5min       = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
+                                                                       varName = "automatic", cloneMapFileName = cloneMapFileName, LatitudeLongitude = True, specificFillValue = None, absolutePath = None), 0.0)
+    cellArea = pcr.ifthen(landmask, cell_area_5min)
+
+
     # class (country) ids
     uniqueIDsFile = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
     # class (country) ids
@@ -144,33 +151,6 @@ def main():
     # - extending landmask with uniqueIDs
     landmask = pcr.cover(landmask, pcr.defined(uniqueIDs))
     
-    # extending class (country) ids
-    max_step = 7
-    for i in range(1, max_step+1, 1):
-        cmd = "Extending class: step "+str(i)+" from " + str(max_step)
-        print(cmd)
-        uniqueIDs = pcr.cover(uniqueIDs, pcr.windowmajority(uniqueIDs, 0.5))
-    # - cover the rest with a new id
-    uniqueIDs = pcr.cover(uniqueIDs, pcr.nominal(pcr.mapmaximum(pcr.scalar(uniqueIDs)) + 1000))
-    # - use only cells within the landmask
-    uniqueIDs = pcr.ifthen(landmask, uniqueIDs)
-    pcr.report(uniqueIDs, "class_ids.map")                                
-
-    # cell area at 5 arcmin resolution (unit: m2)
-    cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
-    cell_area_5min       = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
-                                                                       varName = "automatic", cloneMapFileName = cloneMapFileName, LatitudeLongitude = True, specificFillValue = None, absolutePath = None), 0.0)
-    cellArea = pcr.ifthen(landmask, cell_area_5min)
-
-    # class (country) ids
-    uniqueIDsFile = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
-
-    # class (country) ids
-    uniqueIDs = pcr.nominal(\
-                vos.readPCRmapClone(uniqueIDsFile, cloneMapFileName, tmp_directory, 
-                                    None, False, None, True))
-    uniqueIDs = pcr.ifthen(pcr.scalar(uniqueIDs) >= 0.0, uniqueIDs)
-
     # extending class (country) ids
     max_step = 7
     for i in range(1, max_step+1, 1):
@@ -223,7 +203,7 @@ def main():
     attributeDictionary['description']  = "Created by Edwin H. Sutanudjaja, see https://github.com/edwinkost/pgb_data_for_prometheus_primes/blob/main/scripts/zonal_calculation_tss_for_aqueduct_2021_for_electricity_water_demand.py"
 
     # initiate the netcd object: 
-    tssNetCDF = MakingNetCDF(cloneMapFile = clone_map_file, \
+    tssNetCDF = MakingNetCDF(cloneMapFile = cloneMapFileName, \
                              attribute    = attributeDictionary)
     # initiate the netcdf file:
     output = {}
