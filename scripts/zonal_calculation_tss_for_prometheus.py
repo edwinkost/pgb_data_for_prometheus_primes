@@ -124,9 +124,9 @@ def main():
 
 
     # industrial gross demand (m.day-1, monthly resolution)
-    directory_for_water_demand  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
-    industrial_gross_demand     = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
-    # ~ industrial_gross_demand     = directory_for_water_demand + "/" + str(sys.argv[3])
+    directory_for_water_demand   = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
+    industrial_gross_demand_file = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
+    # ~ industrial_gross_demand  = directory_for_water_demand + "/" + str(sys.argv[3])
     
 
     # clone map
@@ -241,8 +241,8 @@ def main():
 
             # industrial water demand 
             # - unit: m.day-1
-            industrial_water_demand = vos.netcdf2PCRobjClone(ncFile = irr_area_5min_file,\
-                                               varName = "automatic", dateInput = fulldate, useDoy = None, cloneMapFileName  = clone_map_file, LatitudeLongitude = True, specificFillValue = None)
+            industrial_water_demand = vos.netcdf2PCRobjClone(ncFile = industrial_gross_demand_file,\
+                                                             varName = "industryGrossDemand", dateInput = fulldate, useDoy = None, cloneMapFileName  = clone_map_file, LatitudeLongitude = True, specificFillValue = None)
             # - number of days within a month
             number_of_days_in_this_month = calendar.monthrange(iYear, iMonth)[1]
             # - unit: m3.month-1
