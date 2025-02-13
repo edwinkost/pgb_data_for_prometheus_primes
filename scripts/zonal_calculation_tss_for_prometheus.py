@@ -100,6 +100,7 @@ class MakingNetCDF():
 
 def main():
 
+
     # output and temporary directories
     out_directory     = "/scratch-shared/edwinbar/electricity_water_demand/test/"
     # ~ out_directory = sys.argv[1]
@@ -116,25 +117,22 @@ def main():
     table_directory = out_directory + "/table/"
     os.makedirs(table_directory)
 
+
     # output file code (which will be used as part of output file names)												
     output_file_code = "historical"
     # ~ output_file_code = str(sys.argv[2])
+
 
     # industrial gross demand (m.day-1, monthly resolution)
     directory_for_water_demand  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
     industrial_gross_demand     = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
     # ~ industrial_gross_demand     = directory_for_water_demand + "/" + str(sys.argv[3])
     
+
     # clone map
     cloneMapFileName = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/lddsound_05min_version_20210330.map"
     pcr.setclone(cloneMapFileName) 
     
-    # landmask                               
-    landmask05minFile = cloneMapFileName
-    landmask = pcr.defined(pcr.readmap(landmask05minFile))
-    landmask = pcr.ifthen(landmask, landmask)
-    # - extending landmask with uniqueIDs
-    landmask = pcr.cover(landmask, pcr.defined(uniqueIDs))
 
     # cell area at 5 arcmin resolution (unit: m2)
     cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
@@ -151,7 +149,15 @@ def main():
                                     None, False, None, True))
     uniqueIDs = pcr.ifthen(pcr.scalar(uniqueIDs) >= 0.0, uniqueIDs)
     
+
+    # landmask                               
+    landmask05minFile = cloneMapFileName
+    landmask = pcr.defined(pcr.readmap(landmask05minFile))
+    landmask = pcr.ifthen(landmask, landmask)
+    # - extending landmask with uniqueIDs
+    landmask = pcr.cover(landmask, pcr.defined(uniqueIDs))
     
+
     # extending class (country) ids
     max_step = 7
     for i in range(1, max_step+1, 1):
