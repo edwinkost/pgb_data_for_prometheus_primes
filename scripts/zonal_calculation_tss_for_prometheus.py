@@ -219,7 +219,7 @@ def main():
     output = {}
     var = "electricity_water_demand"
     output[var] = {}
-    output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" 
+    output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" + output_file_code + ".nc"
     output[var]['unit']      = "m3.year-1"
     variable_names = [var]
     for var in variable_names:
