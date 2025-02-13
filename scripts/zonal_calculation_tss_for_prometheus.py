@@ -241,8 +241,8 @@ def main():
 
             # industrial water demand 
             # - unit: m.day-1
-            industrial_water_demand = vos.netcdf2PCRobjClone(ncFile = industrial_gross_demand_file,\
-                                                             varName = "industryGrossDemand", dateInput = fulldate, useDoy = None, cloneMapFileName  = clone_map_file, LatitudeLongitude = True, specificFillValue = None)
+            industrial_water_demand = vos.netcdf2PCRobjClone(ncFile  = industrial_gross_demand_file,\
+                                                             varName = "industryGrossDemand", dateInput = fulldate, useDoy = None, cloneMapFileName = cloneMapFileName, LatitudeLongitude = True, specificFillValue = None)
             # - number of days within a month
             number_of_days_in_this_month = calendar.monthrange(iYear, iMonth)[1]
             # - unit: m3.month-1
