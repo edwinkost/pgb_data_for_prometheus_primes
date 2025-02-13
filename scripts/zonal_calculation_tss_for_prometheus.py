@@ -238,7 +238,7 @@ def main():
         for iMonth in range(1, 12+1):
 
             # initating the variable to calculate yearly electricity water demand
-            if iMonth == 0: country_annual_electricity_water_demand_volume = 0.0
+            if iMonth == 1: country_annual_electricity_water_demand_volume = 0.0
 
             # time stamp for reading netcdf file:
             fulldate = '%4i-%02i-%02i'  %(int(iYear), int(iMonth), int(1))
