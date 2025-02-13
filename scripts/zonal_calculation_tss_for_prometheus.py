@@ -269,6 +269,7 @@ def main():
         # write values to a netcdf file
         var = "electricity_water_demand"
         ncFileName = output[var]['file_name']
+        pcrValue = country_annual_electricity_water_demand_volume
         varField = pcr.pcr2numpy(pcrValue, vos.MV)
         tssNetCDF.writePCR2NetCDF(ncFileName, var, varField, timeStamp, posCnt = index - 1)
             
