@@ -231,7 +231,7 @@ def main():
         
         print(iYear)
         
-        for iMonth in range(0, 12+1):
+        for iMonth in range(1, 12+1):
 
             # initating the variable to calculate yearly electricity water demand
             if iMonth == 0: country_annual_electricity_water_demand_volume = 0.0
