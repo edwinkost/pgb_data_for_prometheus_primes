@@ -129,6 +129,13 @@ def main():
     cloneMapFileName = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/lddsound_05min_version_20210330.map"
     pcr.setclone(cloneMapFileName) 
     
+    # landmask                               
+    landmask05minFile = cloneMapFileName
+    landmask = pcr.defined(pcr.readmap(landmask05minFile))
+    landmask = pcr.ifthen(landmask, landmask)
+    # - extending landmask with uniqueIDs
+    landmask = pcr.cover(landmask, pcr.defined(uniqueIDs))
+
     # cell area at 5 arcmin resolution (unit: m2)
     cell_area_5min_file  = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/general/cdo_gridarea_clone_global_05min_correct_lats.nc"
     cell_area_5min       = pcr.cover(vos.netcdf2PCRobjCloneWithoutTime(ncFile  = cell_area_5min_file, \
@@ -144,12 +151,6 @@ def main():
                                     None, False, None, True))
     uniqueIDs = pcr.ifthen(pcr.scalar(uniqueIDs) >= 0.0, uniqueIDs)
     
-    # landmask                               
-    landmask05minFile = cloneMapFileName
-    landmask = pcr.defined(pcr.readmap(landmask05minFile))
-    landmask = pcr.ifthen(landmask, landmask)
-    # - extending landmask with uniqueIDs
-    landmask = pcr.cover(landmask, pcr.defined(uniqueIDs))
     
     # extending class (country) ids
     max_step = 7
