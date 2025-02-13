@@ -218,12 +218,14 @@ def main():
     # initiate the netcdf file:
     output = {}
     var = "electricity_water_demand"
+    output[var] = {}
     output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" 
     output[var]['unit']      = "m3.year-1"
     for var in variable_names:
         tssNetCDF.createNetCDF(output[var]['file_name'], var, output[var]['unit'])
 
     
+    # calculating and writing to the netcdf file
     for iYear in range(staYear, endYear+1):
         
         print(iYear)
