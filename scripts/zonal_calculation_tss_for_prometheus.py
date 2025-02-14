@@ -223,8 +223,9 @@ def main():
     output = {}
     var = "electricity_water_demand"
     output[var] = {}
-    output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" + output_file_code + ".nc"
-    output[var]['unit']      = "m3.year-1"
+    # ~ output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" + output_file_code + ".nc"
+    output[var]['file_name']     = out_directory + "/" + output_file_code + ".nc"
+    output[var]['unit']          = "m3.year-1"
     variable_names = [var]
     for var in variable_names:
         tssNetCDF.createNetCDF(output[var]['file_name'], var, output[var]['unit'])
