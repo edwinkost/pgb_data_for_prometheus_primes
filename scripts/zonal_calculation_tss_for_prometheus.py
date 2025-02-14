@@ -122,8 +122,8 @@ def main():
 
 
     # output file code (which will be used as part of output file names)												
-    output_file_code = "electricity_water_demand_historical"
-    # ~ output_file_code = str(sys.argv[2])
+    # ~ output_file_code = "electricity_water_demand_historical"
+    output_file_code = str(sys.argv[2])
 
 
     # industrial gross demand (m.day-1, monthly resolution)
