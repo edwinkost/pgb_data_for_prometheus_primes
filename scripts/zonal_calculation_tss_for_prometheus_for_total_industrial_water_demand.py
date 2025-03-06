@@ -197,7 +197,7 @@ def main():
                              attribute    = attributeDictionary)
     # initiate the netcdf file:
     output = {}
-    var = "electricity_water_demand"
+    var = "industrial_water_demand"
     output[var] = {}
     # ~ output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" + output_file_code + ".nc"
     output[var]['file_name']     = out_directory + "/" + output_file_code + ".nc"
@@ -215,7 +215,7 @@ def main():
         for iMonth in range(1, 12+1):
 
             # initating the variable to calculate yearly electricity water demand
-            if iMonth == 1: country_annual_electricity_water_demand_volume = 0.0
+            if iMonth == 1: country_annual_industrial_water_demand_volume = 0.0
 
             # time stamp for reading netcdf file:
             fulldate = '%4i-%02i-%02i'  %(int(iYear), int(iMonth), int(1))
@@ -232,11 +232,8 @@ def main():
             # country scale industrial water demand (unit: m3.month-1 per country)
             country_monthly_industrial_water_demand_volume = pcr.areatotal(monthly_industrial_water_demand_volume, uniqueIDs)
             
-            # country scale electricity water demand (unit: m3.month-1 per country)
-            country_monthly_electricity_water_demand_volume = country_pow_man_split_map * country_monthly_industrial_water_demand_volume
-            
             # accumulate it over the year 
-            country_annual_electricity_water_demand_volume  = country_annual_electricity_water_demand_volume + country_monthly_electricity_water_demand_volume
+            country_annual_industrial_water_demand_volume  = country_annual_industrial_water_demand_volume + country_monthly_industrial_water_demand_volume
 
 
         # index and timeStamp for writing the netcdf
@@ -245,9 +242,9 @@ def main():
         timeStamp = datetime.datetime(int(iYear), int(12), int(31), int(0))
 
         # write values to a netcdf file
-        var = "electricity_water_demand"
+        var = "industrial_water_demand"
         ncFileName = output[var]['file_name']
-        pcrValue = country_annual_electricity_water_demand_volume
+        pcrValue = country_annual_industrial_water_demand_volume
         varField = pcr.pcr2numpy(pcrValue, vos.MV)
         tssNetCDF.writePCR2NetCDF(ncFileName, var, varField, timeStamp, posCnt = index - 1)
             
