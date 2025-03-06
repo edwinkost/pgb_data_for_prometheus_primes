@@ -250,7 +250,7 @@ def main():
             
         # plot the values at sample cells only and write values to a temporary pcraster map
         pcrFileName = str(tmp_directory) + "/" + str(var) + ".tmp"
-        pcr.report(pcr.ifthen(pcr.defined(uniqueIDs_sample), country_annual_electricity_water_demand_volume), pcrFileName)
+        pcr.report(pcr.ifthen(pcr.defined(uniqueIDs_sample), country_annual_industrial_water_demand_volume), pcrFileName)
 
         
         # write class values to a table
