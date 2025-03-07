@@ -131,7 +131,7 @@ def main():
     
 
     # class (country) ids
-    uniqueIDsFile = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
+    uniqueIDsFile = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
     # class (country) ids
     uniqueIDs = pcr.nominal(\
                 vos.readPCRmapClone(uniqueIDsFile, cloneMapFileName, tmp_directory, 
@@ -181,13 +181,31 @@ def main():
     # table contains country values of fraction of electricy water demand from industrial water demand
     # - column 1 is the row_number_CNTR_RG_01M_2020_4326.shp.tif.map
     # - column 2 is the fraction of electricy water demand from industrial water demand
-    table_pow_man_split       = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/pow_man_split/pow_man_split.txt"
+    table_pow_man_split       = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/data/pgb_power_split.txt"
     # - country map of this fraction
     country_pow_man_split_map = pcr.lookupscalar(table_pow_man_split, uniqueIDs)
+    #
     # - cover missing values with 0.5
     country_pow_man_split_map = pcr.cover(country_pow_man_split_map, 0.5)
     # - make sure that every country has a unique value
     country_pow_man_split_map = pcr.areaaverage(country_pow_man_split_map, uniqueIDs)
+    
+
+    # table contains country values of installed capacity for the year 2015
+    # - column 1 is the row_number_CNTR_RG_01M_2020_4326.shp.tif.map
+    # - column 2 is the installed capacity for the year 2015
+    table_ic_mw_2015          = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/data/pgb_ic_2015.txt"
+    # - country map of this fraction
+    country_ic_mw_2015        = pcr.lookupscalar(table_ic_mw_2015, uniqueIDs)
+    #
+    # - cover missing values with 0.0 - SHALL WE DO THIS?
+    country_ic_mw_2015        = pcr.cover(country_pow_man_split_map, 0.0)
+    # - make sure that every country has a unique value
+    country_ic_mw_2015        = pcr.areaaverage(country_ic_mw_2015, uniqueIDs)
+
+
+    # for country with zero installed capacity, no electricity water demand
+    country_pow_man_split_map = pcr.ifthenelse(country_ic_mw_2015 > 0.0, country_pow_man_split_map, 0.0)
     
 
     # start year and end year

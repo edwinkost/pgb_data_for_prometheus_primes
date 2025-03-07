@@ -98,8 +98,8 @@ def main():
 
 
     # output and temporary directories
-    # ~ out_directory     = "/scratch-shared/edwinbar/electricity_water_demand_estimate_based_on_aqueduct_2021/historical/"
-    out_directory = sys.argv[1]
+    out_directory     = "/scratch-shared/edwin/electricity_water_demand_estimate_based_on_pcrglobwb_aqueduct_2021/historical/"
+    # ~ out_directory = sys.argv[1]
     tmp_directory     = out_directory + "/" + "tmp" + "/"
     # - making output and temporary directories
     if os.path.exists(out_directory):
@@ -115,14 +115,14 @@ def main():
 
 
     # output file code (which will be used as part of output file names)												
-    # ~ output_file_code = "electricity_water_demand_historical"
-    output_file_code = str(sys.argv[2])
+    output_file_code = "electricity_water_demand_historical"
+    # ~ output_file_code = str(sys.argv[2])
 
 
     # industrial gross demand (m.day-1, monthly resolution)
     directory_for_water_demand       = "/projects/0/dfguu/users/edwin/data/pcrglobwb_input_aqueduct/version_2021-09-16/historical_and_ssp_files/"
-    # ~ industrial_gross_demand_file = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
-    industrial_gross_demand_file     = directory_for_water_demand + "/" + str(sys.argv[3])
+    industrial_gross_demand_file     = directory_for_water_demand + "/" + "industry_water_demand_historical_1960-2019.nc"
+    # ~ industrial_gross_demand_file = directory_for_water_demand + "/" + str(sys.argv[3])
     
 
     # clone map
@@ -131,7 +131,7 @@ def main():
     
 
     # class (country) ids
-    uniqueIDsFile = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
+    uniqueIDsFile = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/iso3_countries/row_number_CNTR_RG_01M_2020_4326.shp.tif.map"
     # class (country) ids
     uniqueIDs = pcr.nominal(\
                 vos.readPCRmapClone(uniqueIDsFile, cloneMapFileName, tmp_directory, 
@@ -181,20 +181,81 @@ def main():
     # table contains country values of fraction of electricy water demand from industrial water demand
     # - column 1 is the row_number_CNTR_RG_01M_2020_4326.shp.tif.map
     # - column 2 is the fraction of electricy water demand from industrial water demand
-    table_pow_man_split       = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/pow_man_split/pow_man_split.txt"
+    table_pow_man_split       = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/data/pgb_power_split.txt"
     # - country map of this fraction
     country_pow_man_split_map = pcr.lookupscalar(table_pow_man_split, uniqueIDs)
+    #
     # - cover missing values with 0.5
     country_pow_man_split_map = pcr.cover(country_pow_man_split_map, 0.5)
     # - make sure that every country has a unique value
     country_pow_man_split_map = pcr.areaaverage(country_pow_man_split_map, uniqueIDs)
     
 
+    # table contains country values of installed capacity for the year 2015
+    # - column 1 is the row_number_CNTR_RG_01M_2020_4326.shp.tif.map
+    # - column 2 is the installed capacity for the year 2015
+    table_ic_mw_2015          = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/data/pgb_ic_2015.txt"
+    # - country map of the installed capacity- unit: MW
+    country_ic_mw_2015        = pcr.lookupscalar(table_ic_mw_2015, uniqueIDs)
+    #
+    # - cover missing values with 0.0 - SHALL WE DO THIS?
+    country_ic_mw_2015        = pcr.cover(country_pow_man_split_map, 0.0)
+    # - make sure that every country has a unique value
+    country_ic_mw_2015        = pcr.areaaverage(country_ic_mw_2015, uniqueIDs)
+
+
+    # for country with zero installed capacity, no electricity water demand
+    country_pow_man_split_map = pcr.ifthenelse(country_ic_mw_2015 > 0.0, country_pow_man_split_map, 0.0)
+    
+
+    # get the values for the year 2015 (the base year)
+    #
+    for iYear in range(2015, 2015 + 1):
+        
+        print(iYear)
+
+        for iMonth in range(1, 12+1):
+
+            # initating the variable to calculate yearly electricity water demand
+            if iMonth == 1: country_annual_electricity_water_demand_volume = 0.0
+
+            # time stamp for reading netcdf file:
+            fulldate = '%4i-%02i-%02i'  %(int(iYear), int(iMonth), int(1))
+
+            # industrial water demand 
+            # - unit: m.day-1
+            industrial_water_demand = vos.netcdf2PCRobjClone(ncFile  = industrial_gross_demand_file,\
+                                                             varName = "industryGrossDemand", dateInput = fulldate, useDoy = None, cloneMapFileName = cloneMapFileName, LatitudeLongitude = True, specificFillValue = None)
+            # - number of days within a month
+            number_of_days_in_this_month = calendar.monthrange(iYear, iMonth)[1]
+            # - unit: m3.month-1
+            monthly_industrial_water_demand_volume = industrial_water_demand * cellArea * number_of_days_in_this_month
+            
+            # country scale industrial water demand (unit: m3.month-1 per country)
+            country_monthly_industrial_water_demand_volume = pcr.areatotal(monthly_industrial_water_demand_volume, uniqueIDs)
+            
+            # country scale electricity water demand (unit: m3.month-1 per country)
+            country_monthly_electricity_water_demand_volume = country_pow_man_split_map * country_monthly_industrial_water_demand_volume
+            
+            # accumulate it over the year 
+            country_annual_electricity_water_demand_volume  = country_annual_electricity_water_demand_volume + country_monthly_electricity_water_demand_volume
+        
+        # country scale electricity water demand (unit: m3.year-1 per country)
+        country_annual_electricity_water_demand_volume_2015 = country_annual_electricity_water_demand_volume 
+
+        # - assumption for annual power production (24 hours, 365 days production) in the year 2015 - unit: MWh
+        number_of_days_in_2015                = 365 + calendar.isleap(iYear)
+        country_annual_power_production_2015  = country_ic_mw_2015 * number_of_days_in_2015 * 24.
+
+        # country scale electricity water demand (unit: m3.MWh-1.year-1 per country)
+        country_annual_electricity_water_demand_per_mwh_2015 = country_annual_electricity_water_demand_volume_2015 / country_annual_power_production_2015 
+     
+
     # start year and end year
-    # ~ staYear = 1960
-    # ~ endYear = 2019
-    staYear = int(sys.argv[4])
-    endYear = int(sys.argv[5])
+    staYear = 1960
+    endYear = 2019
+    # ~ staYear = int(sys.argv[4])
+    # ~ endYear = int(sys.argv[5])
     
 
     # attribute for netCDF files 
@@ -206,7 +267,7 @@ def main():
     attributeDictionary['references' ]  = "None"
     attributeDictionary['comment'    ]  = "The country code is based on the " +  str(uniqueIDsFile) + "."
     # additional attribute defined in PCR-GLOBWB 
-    attributeDictionary['description']  = "Created by Edwin H. Sutanudjaja, see https://github.com/edwinkost/pgb_data_for_prometheus_primes/blob/main/scripts/zonal_calculation_tss_for_aqueduct_2021_for_electricity_water_demand.py"
+    attributeDictionary['description']  = "Created by Edwin H. Sutanudjaja, see https://github.com/edwinkost/pgb_data_for_prometheus_primes/blob/main/scripts/zonal_calculation_tss_for_prometheus_electricity_water_demand.py"
 
 
     # initiate the netcd object: 
@@ -218,7 +279,7 @@ def main():
     output[var] = {}
     # ~ output[var]['file_name'] = "/scratch-shared/edwinbar/electricity_water_demand/test/" + output_file_code + ".nc"
     output[var]['file_name']     = out_directory + "/" + output_file_code + ".nc"
-    output[var]['unit']          = "m3.year-1"
+    output[var]['unit']          = "m3.MWh-1.year-1"
     variable_names = [var]
     for var in variable_names:
         tssNetCDF.createNetCDF(output[var]['file_name'], var, output[var]['unit'])
@@ -255,7 +316,15 @@ def main():
             # accumulate it over the year 
             country_annual_electricity_water_demand_volume  = country_annual_electricity_water_demand_volume + country_monthly_electricity_water_demand_volume
 
+        
+        # country scale electricity water demand (unit: m3.year-1 per country)
+        country_annual_electricity_water_demand_volume_for_this_year  = country_annual_electricity_water_demand_volume 
 
+        # country scale electricity water demand (unit: m3.MWh-1.year-1 per country)
+        country_annual_electricity_water_demand_per_mwh_for_this_year = country_annual_electricity_water_demand_per_mwh_2015 * \
+                                                                       (country_annual_electricity_water_demand_volume_for_this_year / \
+                                                                        country_annual_electricity_water_demand_volume_2015) 
+        
         # index and timeStamp for writing the netcdf
         if iYear == staYear: index = 0
         index = index + 1
@@ -264,15 +333,14 @@ def main():
         # write values to a netcdf file
         var = "electricity_water_demand"
         ncFileName = output[var]['file_name']
-        pcrValue = country_annual_electricity_water_demand_volume
+        pcrValue = country_annual_electricity_water_demand_per_mwh_for_this_year
         varField = pcr.pcr2numpy(pcrValue, vos.MV)
         tssNetCDF.writePCR2NetCDF(ncFileName, var, varField, timeStamp, posCnt = index - 1)
             
         # plot the values at sample cells only and write values to a temporary pcraster map
         pcrFileName = str(tmp_directory) + "/" + str(var) + ".tmp"
         pcr.report(pcr.ifthen(pcr.defined(uniqueIDs_sample), country_annual_electricity_water_demand_volume), pcrFileName)
-
-        
+       
         # write class values to a table
         # - command line to call map2col
         cmd    = 'map2col -x 1 -y 2 -m NA sample.ids'
