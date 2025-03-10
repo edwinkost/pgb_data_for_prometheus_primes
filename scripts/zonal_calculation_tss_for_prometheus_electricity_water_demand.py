@@ -183,7 +183,7 @@ def main():
     # - column 2 is the fraction of electricy water demand from industrial water demand
     table_pow_man_split       = "/home/edwin/github/edwinkost/pgb_data_for_prometheus_primes/data/pgb_power_split.txt"
     # - country map of this fraction
-    country_pow_man_split_map = pcr.lookupscalar(table_pow_man_split, uniqueIDs)
+    country_pow_man_split_map = pcr.lookupscalar(table_pow_man_split, uniqueIDs)/100.
     #
     # - cover missing values with 0.5
     country_pow_man_split_map = pcr.cover(country_pow_man_split_map, 0.5)
@@ -327,7 +327,7 @@ def main():
                                                                         country_annual_electricity_water_demand_volume_2015)
         # - set zero for countries without installed capacity
         country_annual_electricity_water_demand_per_mwh_for_this_year = pcr.ifthenelse(country_annual_electricity_water_demand_volume_2015 > 0.0, country_annual_electricity_water_demand_per_mwh_for_this_year, \
-                                                                                                                                                  country_annual_electricity_water_demand_volume_2015)                                                                 
+                                                                                                                                                  0.0)                                                                 
         
         # index and timeStamp for writing the netcdf
         if iYear == staYear: index = 0
