@@ -248,7 +248,8 @@ def main():
         country_annual_power_production_2015  = country_ic_mw_2015 * number_of_days_in_2015 * 24.
 
         # country scale electricity water demand (unit: m3.MWh-1.year-1 per country)
-        country_annual_electricity_water_demand_per_mwh_2015 = country_annual_electricity_water_demand_volume_2015 / country_annual_power_production_2015 
+        country_annual_electricity_water_demand_per_mwh_2015 = pcr.ifthenelse(country_annual_power_production_2015 > 0.0, \
+                                                                              country_annual_electricity_water_demand_volume_2015 / country_annual_power_production_2015, 0.0)
      
 
     # start year and end year
@@ -323,7 +324,10 @@ def main():
         # country scale electricity water demand (unit: m3.MWh-1.year-1 per country)
         country_annual_electricity_water_demand_per_mwh_for_this_year = country_annual_electricity_water_demand_per_mwh_2015 * \
                                                                        (country_annual_electricity_water_demand_volume_for_this_year / \
-                                                                        country_annual_electricity_water_demand_volume_2015) 
+                                                                        country_annual_electricity_water_demand_volume_2015)
+        # - set zero for countries without installed capacity
+        country_annual_electricity_water_demand_per_mwh_for_this_year = pcr.ifthenelse(country_annual_electricity_water_demand_volume_2015 > 0.0, country_annual_electricity_water_demand_per_mwh_for_this_year, \
+                                                                                                                                                  country_annual_electricity_water_demand_volume_2015)                                                                 
         
         # index and timeStamp for writing the netcdf
         if iYear == staYear: index = 0
@@ -339,7 +343,7 @@ def main():
             
         # plot the values at sample cells only and write values to a temporary pcraster map
         pcrFileName = str(tmp_directory) + "/" + str(var) + ".tmp"
-        pcr.report(pcr.ifthen(pcr.defined(uniqueIDs_sample), country_annual_electricity_water_demand_volume), pcrFileName)
+        pcr.report(pcr.ifthen(pcr.defined(uniqueIDs_sample), country_annual_electricity_water_demand_per_mwh_for_this_year), pcrFileName)
        
         # write class values to a table
         # - command line to call map2col
