@@ -176,8 +176,8 @@ def main():
 
 
     # start year and end year
-    staYear = 1960
-    endYear = 2019
+    staYear = 2015
+    endYear = 2015
     
 
     # attribute for netCDF files 

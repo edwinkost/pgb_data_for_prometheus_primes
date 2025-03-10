@@ -184,10 +184,11 @@ def main():
     table_pow_man_split       = "/home/edwinbar/github/edwinkost/pgb_data_for_prometheus_primes/pow_man_split/pow_man_split.txt"
     # - country map of this fraction
     country_pow_man_split_map = pcr.lookupscalar(table_pow_man_split, uniqueIDs)
-    # - cover missing values with 0.5
-    country_pow_man_split_map = pcr.cover(country_pow_man_split_map, 0.5)
-    # - make sure that every country has a unique value
-    country_pow_man_split_map = pcr.areaaverage(country_pow_man_split_map, uniqueIDs)
+    #
+    # ~ # - cover missing values with 0.5
+    # ~ country_pow_man_split_map = pcr.cover(country_pow_man_split_map, 0.5)
+    # ~ # - make sure that every country has a unique value
+    # ~ country_pow_man_split_map = pcr.areaaverage(country_pow_man_split_map, uniqueIDs)
     
 
     # start year and end year
