@@ -243,6 +243,10 @@ def main():
         # country scale electricity water demand (unit: m3.year-1 per country)
         country_annual_electricity_water_demand_volume_2015 = country_annual_electricity_water_demand_volume 
 
+        pcr.aguila(country_annual_electricity_water_demand_volume_2015)
+
+        pietje                                                                      
+
         # - assumption for annual power production (24 hours, 365 days production) in the year 2015 - unit: MWh
         number_of_days_in_2015                = 365 + calendar.isleap(iYear)
         country_annual_power_production_2015  = country_ic_mw_2015 * number_of_days_in_2015 * 24.
