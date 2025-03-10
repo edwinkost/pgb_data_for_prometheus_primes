@@ -11,22 +11,22 @@
 out_directory="/scratch-shared/edwin/electricity_water_demand_estimate_v20250310_based_on_aqueduct_2021/historical/"
 output_file_code="electricity_water_demand_historical_1960-2019"
 industrial_gross_demand_file="industry_water_demand_historical_1960-2019.nc"
-python zonal_calculation_tss_for_prometheus.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 1960 2019 &
+python zonal_calculation_tss_for_prometheus_electricity_water_demand.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 1960 2019 &
 
 out_directory="/scratch-shared/edwin/electricity_water_demand_estimate_v20250310_based_on_aqueduct_2021/ssp1/"
 output_file_code="electricity_water_demand_ssp1_2000-2100"
 industrial_gross_demand_file="industry_water_demand_ssp1_2000-2100.nc"
-python zonal_calculation_tss_for_prometheus.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 2000 2100 &
+python zonal_calculation_tss_for_prometheus_electricity_water_demand.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 2000 2100 &
 
 out_directory="/scratch-shared/edwin/electricity_water_demand_estimate_v20250310_based_on_aqueduct_2021/ssp3/"
 output_file_code="electricity_water_demand_ssp3_2000-2100"
 industrial_gross_demand_file="industry_water_demand_ssp3_2000-2100.nc"
-python zonal_calculation_tss_for_prometheus.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 2000 2100 &
+python zonal_calculation_tss_for_prometheus_electricity_water_demand.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 2000 2100 &
 
 out_directory="/scratch-shared/edwin/electricity_water_demand_estimate_v20250310_based_on_aqueduct_2021/ssp5/"
 output_file_code="electricity_water_demand_ssp5_2000-2100"
 industrial_gross_demand_file="industry_water_demand_ssp5_2000-2100.nc"
-python zonal_calculation_tss_for_prometheus.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 2000 2100 &
+python zonal_calculation_tss_for_prometheus_electricity_water_demand.py ${out_directory} ${output_file_code} ${industrial_gross_demand_file} 2000 2100 &
 
 wait
 
