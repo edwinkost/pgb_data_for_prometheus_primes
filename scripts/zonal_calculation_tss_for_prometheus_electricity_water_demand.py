@@ -203,6 +203,10 @@ def main():
     # - make sure that every country has a unique value
     country_ic_mw_2015        = pcr.areaaverage(country_ic_mw_2015, uniqueIDs)
 
+    
+    pcr.aguila(country_ic_mw_2015)
+    pietje                                                                      
+
 
     # for country with zero installed capacity, no electricity water demand
     country_pow_man_split_map = pcr.ifthenelse(country_ic_mw_2015 > 0.0, country_pow_man_split_map, 0.00)
