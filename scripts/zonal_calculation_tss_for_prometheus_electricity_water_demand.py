@@ -199,7 +199,7 @@ def main():
     country_ic_mw_2015        = pcr.lookupscalar(table_ic_mw_2015, uniqueIDs)
     #
     # - cover missing values with 0.0 - SHALL WE DO THIS?
-    country_ic_mw_2015        = pcr.cover(country_pow_man_split_map, 0.0)
+    country_ic_mw_2015        = pcr.cover(country_ic_mw_2015, 0.0)
     # - make sure that every country has a unique value
     country_ic_mw_2015        = pcr.areaaverage(country_ic_mw_2015, uniqueIDs)
 
