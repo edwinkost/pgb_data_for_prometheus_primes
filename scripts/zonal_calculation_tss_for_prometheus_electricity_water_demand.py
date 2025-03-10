@@ -204,8 +204,8 @@ def main():
     country_ic_mw_2015        = pcr.areaaverage(country_ic_mw_2015, uniqueIDs)
 
     
-    pcr.aguila(country_ic_mw_2015)
-    pietje                                                                      
+    # ~ pcr.aguila(country_ic_mw_2015)
+    # ~ pietje                                                                      
 
 
     # for country with zero installed capacity, no electricity water demand
