@@ -205,7 +205,7 @@ def main():
 
 
     # for country with zero installed capacity, no electricity water demand
-    country_pow_man_split_map = pcr.ifthenelse(country_ic_mw_2015 > 0.0, country_pow_man_split_map, 0.0)
+    country_pow_man_split_map = pcr.ifthenelse(country_ic_mw_2015 > 0.0, country_pow_man_split_map, 0.00)
     
 
     # get the values for the year 2015 (the base year)
@@ -326,8 +326,8 @@ def main():
                                                                        (country_annual_electricity_water_demand_volume_for_this_year / \
                                                                         country_annual_electricity_water_demand_volume_2015)
         # - set zero for countries without installed capacity
-        country_annual_electricity_water_demand_per_mwh_for_this_year = pcr.ifthenelse(country_annual_electricity_water_demand_volume_2015 > 0.0, country_annual_electricity_water_demand_per_mwh_for_this_year, \
-                                                                                                                                                  0.0)                                                                 
+        country_annual_electricity_water_demand_per_mwh_for_this_year = pcr.ifthenelse(country_annual_electricity_water_demand_volume_2015 > 0.0, \
+                                                                                       country_annual_electricity_water_demand_per_mwh_for_this_year, 0.0)                                                                 
         
         # index and timeStamp for writing the netcdf
         if iYear == staYear: index = 0
